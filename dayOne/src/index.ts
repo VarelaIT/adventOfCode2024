@@ -17,11 +17,23 @@ function compareNumbers(previous: number, current: number){
 leftList.sort(compareNumbers)
 rightList.sort(compareNumbers)
 
+/*
 const result = leftList.reduce((value: number, current: number, i: number, all: number[])=> {
     let diff = current - rightList[i];
     if(diff < 0)
         diff *= -1;
     return value + diff;
 }, 0);
+*/
 
-console.log(result)
+const result2 = leftList.reduce((value: number, current: number, i: number, all: number[])=> {
+    let times = rightList.reduce((times: number, coincidence: number, i: number, all: number[])=> {
+        if(current === coincidence)
+            times += 1;
+        return times
+    }, 0);
+    let prod = current * times;
+    return value + prod;
+}, 0);
+
+console.log(result2)
