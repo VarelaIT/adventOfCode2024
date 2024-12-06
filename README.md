@@ -130,6 +130,11 @@ More of the above example's reports are now safe:
     8 6 4 4 1: Safe by removing the third level, 4.
     1 3 6 7 9: Safe without removing any level.
 
+    Create condition where the first number can be removed
+    50 43 41 38 37 35 31 27: true
+    62 64 66 66 63: false
+    82 80 78 76 72 74: true
+
 Thanks to the Problem Dampener, 4 reports are actually safe!
 
 Update your analysis by handling situations where the Problem Dampener can remove a single level from unsafe reports. How many reports are now safe?
