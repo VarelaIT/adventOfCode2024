@@ -1,6 +1,6 @@
 def readFile():
     try:
-        file = open("testinput.txt", "r")
+        file = open("input.txt", "r")
         lines = file.readlines()
         return lines
     except:
@@ -49,65 +49,79 @@ def compareDiff(prev, curr, next):
     diff = curr - next
     diffNext  = prev - next
     if validate(prevDiff):
-        return 0
+        return [0, [prev, curr]]
     if not validate(prevDiff) and validate(diff):
-        return 1
+        return [1, [curr, next]]
     if not validate(diff) and validate(diffNext):
-        return -1
+        return [1, [prev, next]]
     return None
+
+def setDirection(prev, curr):
+    if(prev < curr):
+        return 1
+    if(prev > curr):
+        return -1
+    return 0
 
 saveReports = 0
 
 for line in inputLines:
     good = True
     bad = 0
-    loop = 0
+    loop = 1
     dir = 0
     diff = 0
     prev = 0
     curr = 0
-    for number in line.split():
-        curr = int(number)
-        direction = 0
-        added = False
+    numbers = line.split()
+    print(numbers)
+    while loop < len(numbers):
+        curr = int(numbers[loop])
         if(loop == 1):
-            next = int(number[loop + 1])
+            prev = int(numbers[0])
+            curr = int(numbers[1])
+            next = int(numbers[2])
+            #print("index: ", loop, "prev: ", prev, "curr: ", curr, "status: ", prev - curr)
             result = compareDiff(prev, curr, next)
             if(result is None):
                 good = False
                 break
-            if(result == 1):
-                dir = 0
-                bad += 1
-                #what are we doing here?
-
-        if loop > 0:
-            diff = curr - prev
-            if diff > 0 and diff < 4:
-                direction = 1
-            if diff < 0 and diff > -4:
-                direction = -1
-            if dir == 0 and bad == 0:
-                dir = direction
-            if not validate(curr):
-                bad += 1
-                added = True
-            elif loop > 1 and dir != 0 and dir != direction:
-                bad += 1
-                added = True
-            if added == False:
+            if(result[0] == 0):
+                dir = setDirection(result[1][0], result[1][1])
                 prev = curr
-        else:
-            prev = curr
-        loop += 1
-        #print(loop, " dir: ", dir, " count: ", bad, " diff: ", diff, " prev: ", prev)
-        if bad > 1:
+                loop += 1
+                continue
+            if(result[0] == 1):
+                bad += 1
+                dir = setDirection(result[1][0], result[1][1])
+                loop += 2
+                prev = result[1][1]
+                continue
+        #print("index: ", loop, "prev: ", prev, "curr: ", curr, "status: ", prev - curr)
+        if(not validate(prev - curr)):
+            bad += 1
+            loop += 1
+            if(bad > 1):
+                good = False
+                break
+            continue
+        elif(setDirection(prev, curr) != dir):
+            bad += 1
+            loop += 1
+            if(bad > 1):
+                good = False
+                break
+            continue
+        if(bad > 1):
             good = False
             break
+        prev = curr
+        loop += 1
+       
         
+    print("Valid: ", good)
     if good == True:
         saveReports += 1 
-    print(good, line)
 
 print("total: ", saveReports)
 
