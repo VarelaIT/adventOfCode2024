@@ -63,66 +63,92 @@ def setDirection(prev, curr):
         return -1
     return 0
 
+def validateLine(numbers):
+    loop = 0
+    dir = None
+    prev = None
+    for number in numbers:
+
+        if loop > 0:
+            diff = number - prev
+            if diff > 0 and diff < 4:
+                direction = 1
+            if diff < 0 and diff > -4:
+                direction = 0
+            if diff == 0 or diff > 3 or diff < -3:
+                return False
+                break
+        if loop == 1:
+            dir = direction
+        if loop > 1 and dir != direction:
+            return False
+            break
+        prev = number
+        loop += 1
+    return True
+
+def removeLevel(numbers):
+    result = []
+    loop = 1
+    diff = None
+    prev = None
+    while loop < len(numbers):
+        curr = numbers[loop]
+        if(loop == 1):
+            prev = int(numbers[0])
+            next = int(numbers[2])
+            #print("index: ", loop, "prev: ", prev, "curr: ", curr, "status: ", prev - curr)
+            value = compareDiff(prev, curr, next)
+            if(value is None):
+                return numbers
+            if(value[0] == 0):
+                dir = setDirection(result[1][0], result[1][1])
+                result.append(result[1][0], result[1][1])
+                prev = cur
+                loop += 1
+                continue
+            if(value[0] == 1):
+                bad += 1
+                dir = setDirection(result[1][0], result[1][1])
+                result.append(result[1][0], result[1][1])
+                loop += 2
+                prev = result[1][1]
+                continue
+        else:
+            
+
+    return result
+
+
+
 saveReports = 0
+badOnes = []
+
+def lineToNumbers(line):
+    letters = line.split()
+    numbers = []
+    for letter in letters:
+        numbers.append(int(letter))
+    return numbers
+
 
 for line in inputLines:
     good = True
     bad = 0
-    loop = 1
-    dir = 0
-    diff = 0
-    prev = 0
-    curr = 0
-    numbers = line.split()
-    print(numbers)
-    while loop < len(numbers):
-        curr = int(numbers[loop])
-        if(loop == 1):
-            prev = int(numbers[0])
-            curr = int(numbers[1])
-            next = int(numbers[2])
-            #print("index: ", loop, "prev: ", prev, "curr: ", curr, "status: ", prev - curr)
-            result = compareDiff(prev, curr, next)
-            if(result is None):
-                good = False
-                break
-            if(result[0] == 0):
-                dir = setDirection(result[1][0], result[1][1])
-                prev = curr
-                loop += 1
-                continue
-            if(result[0] == 1):
-                bad += 1
-                dir = setDirection(result[1][0], result[1][1])
-                loop += 2
-                prev = result[1][1]
-                continue
-        #print("index: ", loop, "prev: ", prev, "curr: ", curr, "status: ", prev - curr)
-        if(not validate(prev - curr)):
-            bad += 1
-            loop += 1
-            if(bad > 1):
-                good = False
-                break
-            continue
-        elif(setDirection(prev, curr) != dir):
-            bad += 1
-            loop += 1
-            if(bad > 1):
-                good = False
-                break
-            continue
-        if(bad > 1):
+    numbers = lineToNumbers(line)
+    if(not validateLine(numbers)):
+        newNumbers removeLevel(numbers)
+        if(not validateLine(newNumbers)):
             good = False
-            break
-        prev = curr
-        loop += 1
-       
-        
-    print("Valid: ", good)
     if good == True:
         saveReports += 1 
 
+"""
+for badOne in badOnes:
+    print(badOne)
+"""
+
+print("bad ones: ", len(badOnes))
 print("total: ", saveReports)
 
 
